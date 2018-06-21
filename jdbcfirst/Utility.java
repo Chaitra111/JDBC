@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Scanner;
 
-
-
 /**
  * @author Chaitra Ankolekar 
  * Date : 18/05/2018 
@@ -15,6 +13,7 @@ import java.util.Scanner;
 public class Utility {
 	// Method to get string value
 	public static String getString() {
+		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
 		//System.out.println("Enter the input string");
 		return scanner.nextLine();
@@ -22,17 +21,20 @@ public class Utility {
 
 	// Method to get double value
 	public static double getDouble() {
+		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
 		//System.out.println("Enter the double");
 		return scanner.nextDouble();
 	}
 	public static Long getlong() {
+		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Enter the long");
 		return scanner.nextLong();
 		}
 		// Method to get integer value
 	public static int getInteger() {
+		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
 		//System.out.println("Enter the integer");
 		return scanner.nextInt();

@@ -1,24 +1,24 @@
-package com.bridgelabz.Statements;
+package com.bridgelabz.PreparedStatements;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import com.bridgelabz.jdbcfirst.Utility;
 
 public class Crud {
+
 	static Connection conn = null;
-	static Statement stmt = null;
+	static PreparedStatement ps = null;
 	static ResultSet rs = null;
 
-	public static void main(String[] args) {
-		String Driver = "com.mysql.jdbc.Driver";
+	public static void main(String[] args) throws Exception {
 
-		try {
-			Class.forName(Driver);
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Student", "root", "root");
-		}catch (SQLException | ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Class.forName("com.mysql.jdbc.Driver");
+		conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee", "root", "root");
+
 		System.out.println("Enter 1 to create table");
 		System.out.println("Enter 2 to insert table");
 		System.out.println("Enter 3 to read table");
@@ -43,13 +43,13 @@ public class Crud {
 			break;
 		default:
 			break;
-		} 
+		}
 		try {
 			if (rs != null) {
 				rs.close();
 			}
-			if (stmt != null) {
-				stmt.close();
+			if (ps != null) {
+				ps.close();
 			}
 			if (conn != null) {
 				conn.close();
@@ -58,14 +58,12 @@ public class Crud {
 			se.printStackTrace();
 		}
 	}
-	
 
 	public static void create() {
 
-		String query = "create table Student_Info(id int(3) primary key,name varchar(20), clg_name varchar(20),email varchar(20))";
 		try {
-			Statement stmt = conn.createStatement();
-			int i = stmt.executeUpdate(query);
+			ps = conn.prepareStatement("create table Employee_Info(id int(3) primary key,name varchar(20), company_name varchar(20),email varchar(20))");
+			int i = ps.executeUpdate();
 			System.out.println(i + " records created");
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
@@ -74,32 +72,35 @@ public class Crud {
 	}
 
 	public static void insert() {
-		String query = "insert into Student_Info values(4,'medini','SJBIT','medini234@gmail.com')";
-		try {
 
-			Statement stmt = conn.createStatement();
-			int i = stmt.executeUpdate(query);
+		try {
+			ps = conn.prepareStatement("insert into Employee_Info values(?,?,?,?)");
+			ps.setInt( 1, 9);
+			ps.setString( 2, "martin" );
+			ps.setString( 3, "yatra" );
+			ps.setString( 4, "yatrapar@gmail.com" );
+			int i = ps.executeUpdate();
+
 			System.out.println(i + " records inserted");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	public static void read() {
-		String query = "select * from Student_Info";
+
 		try {
-			Statement stmt = conn.createStatement();
-			rs = stmt.executeQuery(query);
+			ps = conn.prepareStatement("SELECT * FROM Employee_Info");
+			rs = ps.executeQuery();
 			while (rs.next()) {
 				int id = rs.getInt("id");
 				String name = rs.getString("name");
-				String clgName = rs.getString("clg_name");
+				String cmpName = rs.getString("company_name");
 				String email = rs.getString("email");
 
 				System.out.println("ID: " + id);
 				System.out.println("Name: " + name);
-				System.out.println("College Name: " + clgName);
+				System.out.println("Company Name: " + cmpName);
 				System.out.println("Email_id: " + email);
 			}
 		} catch (SQLException e) {
@@ -109,10 +110,12 @@ public class Crud {
 	}
 
 	public static void update() {
-		String query = "update Student_Info set name='shruti' where id=4";
+
 		try {
-			Statement stmt = conn.createStatement();
-			int i = stmt.executeUpdate(query);
+			ps = conn.prepareStatement("update Employee_Info set name=? where id=?");
+			ps.setString( 1, "priya" );
+			ps.setInt( 2, 9);
+			int i = ps.executeUpdate();
 			System.out.println(i + " row updated");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -122,11 +125,12 @@ public class Crud {
 	}
 
 	public static void delete() {
-		String query = "delete from Student_Info where id=4";
+
 		try {
-			Statement stmt = conn.createStatement();
-			int i = stmt.executeUpdate(query);
-			System.out.println(i + " rows deleted");
+			ps = conn.prepareStatement("delete from Employee_Info where id=?");
+			ps.setInt(1,9);
+			int i = ps.executeUpdate();
+			System.out.println(i + " row deleted");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -1,30 +1,37 @@
 package com.bridgelabz.Statements;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import com.bridgelabz.jdbcfirst.Utility;
 
-public class Crud {
+public class Multiple {
 	static Connection conn = null;
 	static Statement stmt = null;
 	static ResultSet rs = null;
 
 	public static void main(String[] args) {
+		
 		String Driver = "com.mysql.jdbc.Driver";
 
 		try {
 			Class.forName(Driver);
 			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Student", "root", "root");
-		}catch (SQLException | ClassNotFoundException e) {
+		} catch (SQLException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		System.out.println("Enter 1 to create table");
 		System.out.println("Enter 2 to insert table");
 		System.out.println("Enter 3 to read table");
 		System.out.println("Enter 4 to update table");
 		System.out.println("Enter 5 to delete values inside the table");
 		int choice = Utility.getInteger();
+		do{
 		switch (choice) {
 		case 1:
 			create();
@@ -43,7 +50,16 @@ public class Crud {
 			break;
 		default:
 			break;
-		} 
+		}
+			System.out.println("Do you want to continue: y/n");  
+			String s=Utility.getString();
+			if(s.startsWith("y")){ 
+			choice=2;
+			}
+			if(s.startsWith("n")){  
+			break; 
+			}
+			}while(true);	
 		try {
 			if (rs != null) {
 				rs.close();
@@ -59,7 +75,6 @@ public class Crud {
 		}
 	}
 	
-
 	public static void create() {
 
 		String query = "create table Student_Info(id int(3) primary key,name varchar(20), clg_name varchar(20),email varchar(20))";
